@@ -1,17 +1,20 @@
 import { connect } from "@/dbConfig/dbConfig";
-import User from "@/model/userModel";
+
+var mongoose = require("mongoose");
+var Users = mongoose.model("User");
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const POST = async (NextRequest) => {
+  await connect();
+
   const reqBody = await NextRequest.json();
   const { email, password } = reqBody;
-  await connect();
 
   try {
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await Users.findOne({ email });
     if (!user) {
       return NextResponse.json(
         { message: "User does not exist" },
@@ -28,7 +31,7 @@ export const POST = async (NextRequest) => {
     // Create token data
     const tokenData = {
       id: user._id,
-      username: user.username,
+      name: user.name,
       email: user.email,
     };
 

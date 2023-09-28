@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/model/userModel";
+
 import bcrypt from "bcryptjs";
 const saltRounds = 10;
-connect();
 
 
 export const POST = async (NextRequest) => {
   const reqBody = await NextRequest.json();
 
   const { name, email, password } = reqBody;
+await connect();
 
   let existingUser;
 
